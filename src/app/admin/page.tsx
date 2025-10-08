@@ -15,7 +15,7 @@ export default async function Page() {
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
                 <Link 
-                    href= "admin/citations/1"
+                    href= "api/citations/"
                     className= {buttonVariants({ size: "lg", variant: "outline"})}>
                     Citation n°1    
                 </Link>
