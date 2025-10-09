@@ -9,6 +9,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
     const json = await request.json();
 
+    await new Promise((r) => setTimeout(r, 1000));
     const createdCitation = await prisma.citation.create({
         data: {
             text: json.text,

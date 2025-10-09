@@ -1,28 +1,23 @@
-"user client";
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useFormStatus } from "react-dom";
+import { createCitationAction } from "./citation.action";
 
 export default function Page() {
-    const [isLoading, setIsLoading] = useState(false);
-
     const createCitation = async (FormData: FormData) => {
-        setIsLoading(true);
-        const result = await fetch(`/api/citations`, {
-            body: JSON.stringify({
-                text: FormData.get("citation"),
-                author: FormData.get("author")
-            }),
-            method: "POST"
-        })
-
-        const json = await result.json();
-        setIsLoading(false);
-        console.log(json);
-    }
+        const json = await createCitationAction({
+            text: String(FormData.get("citation")),
+            author: String(FormData.get("author")),
+        });
+        
+        if (json.error) {
+            alert("Somme error occured "+ json.error);
+        }
+    };
     return (
         <Card>
             <CardHeader>
@@ -30,15 +25,27 @@ export default function Page() {
             </CardHeader>
             <CardContent>
                 <form action= { async (formData)=> {
-                    await createCitation(formData)
+                    await  createCitation(formData)
                 }} className="flex flex-col gap-3">
                     <Label>Citation</Label>
                     <Input name="citation"/>
                     <Label>Author</Label>
                     <Input name="author"/>
-                    <Button disabled= {isLoading} type="submit" className="flex flex-col mt-4">Create</Button>
+                    <SubmitButton />
                 </form>
             </CardContent>
         </Card>
+    );
+}
+
+const SubmitButton = ()=> {
+    const { pending } = useFormStatus();
+    return (
+        <Button 
+            disabled= { pending } 
+            type="submit" 
+            className="flex flex-col mt-4">
+                { pending ? "Loading . . ." : "Create" }
+        </Button>
     );
 }
