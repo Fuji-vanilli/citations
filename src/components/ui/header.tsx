@@ -4,7 +4,7 @@ export function Header() {
     return (
         <Card className="p-4">
             <CardHeader>
-                <CardTitle>Citations</CardTitle>
+                <CardTitle>[ Admin ] Citations</CardTitle>
             </CardHeader>
         </Card>
     )
