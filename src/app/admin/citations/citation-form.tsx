@@ -9,9 +9,11 @@ import { createCitationAction, updateCitationAction } from "./citation.action";
 import { Citation } from "@/generated/prisma";
 
 export function CitationForm(props: { citation?: Citation }) {
+    let existCitation: boolean= false;
     const onSubmit = async (FormData: FormData) => {
         let error: null | string = null;
         if (props.citation) {
+            existCitation = true;
             const json = await updateCitationAction(props.citation.id, {
                 text: String(FormData.get("citation")),
                 author: String(FormData.get("author")),
@@ -40,21 +42,21 @@ export function CitationForm(props: { citation?: Citation }) {
                     <Input defaultValue={props.citation?.text} name="citation" />
                     <Label>Author</Label>
                     <Input defaultValue={props.citation?.author} name="author" />
-                    <SubmitButton />
+                    <SubmitButton citationExist= { !!props.citation } />
                 </form>
             </CardContent>
         </Card>
     );
 }
 
-const SubmitButton = () => {
+const SubmitButton = ({ citationExist } : { citationExist: boolean}) => {
     const { pending } = useFormStatus();
     return (
         <Button
             disabled={pending}
             type="submit"
             className="flex flex-col mt-4">
-            {pending ? "Loading . . ." : "Create"}
+            {pending ? "Loading . . ." : (citationExist ? "Update" : "Create")}
         </Button>
     );
 }
